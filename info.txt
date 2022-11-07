@@ -1,0 +1,33 @@
+backend:
+- NodeJS/ES6
+- Express (библиотека для запуска веб-сервера на NodeJS)
+- Express Validator (библиотека для валидации запросов со стороны клиента)
+- MongoDB (база данных)
+- Mongoose (библиотека для подключения к БД)
+- JSON Web Token (авторизация/аунтефикация пользователя)
+- Multer (загрузка картинок на сервер)
+- BCrypt (шифрование паролей)
+
+frontend:
+- React
+- React Toolkit (глобальный стейт менеджер для авторизации и хранение статей)
+- React Hook Form (создание форм)
+- React Router v6 (навигация/роутинг)
+- React Markdown (библиотека для использования разметки Markdown. Отвечает за рендер статьи)
+- Simple Editor (отвечает за рендер редактора)
+- Axios (отправка запросов на сервер)
+
+
+CRUD:
+GET/posts --- Read (дай все статьи)
+GET-posts/:id --- Read (дай одну статью)
+POST/posts --- Create (создать статью)
+PATCH/posts/:id --- Update (обновить статью)
+DELETE/posts/:id --- Delete (удалить статью)
+
+
+HTTP-коды:
+2xx (200 - Ok, 201 - Created) --- Success (успешный ответ)
+3хх (302 - Found) --- Redirect (перенаправление)
+4хх (400 - Bad request, 403 - Forbidden) --- Client Error (клиентская ошибка)
+5хх (500 - Internal Server Error, 502 - Bad Gateway) --- Server Error (серверная ошибка)
