@@ -31,3 +31,6 @@ HTTP-коды:
 3хх (302 - Found) --- Redirect (перенаправление)
 4хх (400 - Bad request, 403 - Forbidden) --- Client Error (клиентская ошибка)
 5хх (500 - Internal Server Error, 502 - Bad Gateway) --- Server Error (серверная ошибка)
+
+
+Nodemon - библиотека отслеживания обновлений в файлах и перезагрузки сервера
