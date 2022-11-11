@@ -3,8 +3,11 @@ import express from 'express';
 import mongoose from "mongoose";
 import {registerValidation} from './validations/auth.js';
 import {validationResult} from "express-validator";
+import UserModel from './models/User.js'; //импортируем модель User с названием UserModel
+import bcrypt from 'bcrypt';
 
-mongoose.connect('mongodb+srv://admin:qqqqqq@cluster0.0v9j9gg.mongodb.net/?retryWrites=true&w=majority') //подключаем с помощью mongoose базу данных mongoDB с логином и паролем указанными при создании БД
+
+mongoose.connect('mongodb+srv://admin:qqqqqq@cluster0.0v9j9gg.mongodb.net/blog?retryWrites=true&w=majority') //подключаем с помощью mongoose базу данных mongoDB с логином и паролем указанными при создании БД
     .then(() => console.log('DB Ok')) // проверяем подключена ли база данных. Если да, что выводим DB Ok
     .catch((err) => console.log('DB error', err)); // если не подключена выводим DB error и ошибку err
 
@@ -34,14 +37,31 @@ app.use(express.json()) //указываем, что с помощью use из 
 // });
 
 
-app.post('/auth/register', registerValidation, (req, res) => { //отлавливаем post-запрос по адресу /auth/register (auth - писать не обязательно). Вытаскиваем запрос req  и ответ res. Проверяем тело запроса и если всё ок, выполняем код дальше
+app.post('/auth/register', registerValidation, async (req, res) => { //отлавливаем post-запрос по адресу /auth/register (auth - писать не обязательно). Вытаскиваем запрос req  и ответ res. Проверяем тело запроса и если всё ок, выполняем код дальше. Объявляем что функция будет async
     const errors = validationResult(req); //получаем в переменную errors все ошибки. Передаём req из которого их и нужно вытащить
     if (!errors.isEmpty()) { //если ошибки есть
         return res.status(400).json(errors.array()); //возвращаем 400 статус (неверный запрос) со всеми ошибками
     }
-    res.json({ //если ошибок нет
-        success: true, //возвращаем строку
+
+    const password = req.body.password; //вытаскиваем из req.body пароль
+    const salt = await bcrypt.genSalt(10); //генерируем соль. await будет ошибкой, пока в параметрах функции не указать, что она async(см.выше!)
+    const passwordHash = await bcrypt.hash(password, salt) //в переменной passwordHash будет хранится зашифрованный пароль. Передаём пароль (password) и алгоритм пароля (salt)
+
+    const doc = new UserModel({ //подготавливаем документ на создание пользователя с помощью mongoDB. Передаём все что есть в req.body
+        email: req.body.email,
+        fullName: req.body.fullName,
+        avatarUrl: req.body.avatarUrl,
+        passwordHash, //переменная с зашифрованным паролем (см. выше)
     })
+
+    const user = await doc.save(); //создаём пользователя в mongoDB и сохраняем в БД. Результат передаётся в переменную user
+
+    // res.json({ //если ошибок нет
+    //     success: true, //возвращаем строку
+    // });
+
+    res.json(user);//возвращаем информацию о пользователе
+
 });
 
 
