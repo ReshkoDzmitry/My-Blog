@@ -3,8 +3,10 @@ import mongoose from "mongoose";
 import {registerValidation} from './validations/auth.js';
 import {validationResult} from "express-validator";
 import UserModel from './models/User.js'; //импортируем модель User с названием UserModel
+import checkAuth from './utils/checkAuth.js'; //импортируем функцию checkAuth
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
+import User from "./models/User.js";
 
 
 mongoose.connect('mongodb+srv://admin:qqqqqq@cluster0.0v9j9gg.mongodb.net/blog?retryWrites=true&w=majority') //подключаем с помощью mongoose базу данных mongoDB с логином и паролем указанными при создании БД
@@ -150,12 +152,25 @@ app.post('/auth/register', registerValidation, async (req, res) => { //отла�
 });
 
 
-app.get('/auth/me', (req, res) => {
+app.get('/auth/me', checkAuth, async (req, res) => { //запрос на получения информации о себе. Перед выполнением основной функции try/catch отрабатывает функция checkAuth, и по итогам ёё работы решается, переходить к try/catch или нет
     try {
+        const user = await User.findById(req.userId); //находим пользователя с помощью UserModel. В метод findById передаём из req userId информацию об id.
 
+        if (!user) { //если такого пользователя нет, то ошибка
+            return res.status(404).json({
+                message: 'Пользователь не найден',
+            });
+        }
+
+        const {passwordHash, ...userData} = user._doc; //если пользователь нашёлся, возвращаем информацию. Чтобы не показывать hash. Его использовать не будем. Ниже выводим только userData
+
+        res.json(userData); //возвращаем информацию о пользователе
     }
-    catch (err) {
 
+    catch (err) {
+        return res.status(500).json({
+            message: 'Нет доступа',
+        });
     }
 })
 
