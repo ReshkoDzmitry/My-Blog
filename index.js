@@ -1,6 +1,6 @@
 import express from 'express';
 import mongoose from "mongoose";
-import {registerValidation} from './validations/auth.js';
+import {registerValidation, loginValidation} from './validations.js';
 import checkAuth from './utils/checkAuth.js'; //импортируем функцию checkAuth
 import * as UserController from './controllers/UserController.js'; //импортировать все методы в UserController
 
@@ -13,7 +13,7 @@ const app = express(); //создание express приложения. Вся �
 app.use(express.json()) //указываем, что с помощью use из express вытаскиваем json. Нужно чтобы приложение понимало json-формат
 
 
-app.post('/auth/login', UserController.login );
+app.post('/auth/login', loginValidation, UserController.login );
 
 // app.get('/', (req, res) => {
 //     res.send('Hi');
@@ -39,9 +39,7 @@ app.post('/auth/login', UserController.login );
 
 app.post('/auth/register', registerValidation, UserController.register);
 
-
 app.get('/auth/me', checkAuth, UserController.getMe);
-
 
 app.listen(4444, (err) => { //запускаем веб-сервер. Указываем на какой порт (любой) прикрепить приложение node.js. Вторым параметром передаем функцию условия запуска.
     if (err) { //если сервер не смог запуститься
