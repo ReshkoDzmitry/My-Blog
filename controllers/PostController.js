@@ -1,6 +1,19 @@
 import PostModel from '../models/Post.js';
-import {loginValidation} from "../validations.js";
 
+
+export const getAll = async (req, res) => { //получение всех статей
+    try {
+        const posts = await PostModel.find(); //находим все статьи и передаём в переменную массив с ними
+
+        res.json(posts); //возращаем массив статей
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Не удалось получить статьи',
+        });
+    }
+}
 
 export const create = async (req, res) => { //асинхронная функция
     try {
