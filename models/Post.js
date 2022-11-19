@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 
-const PostSchema = new mongoose.Schema({ //Создаём схему юзера
+const PostSchema = new mongoose.Schema({ //Создаём схему поста
         title: { //fullName передаём объект с настройками
             type: String, //у title будет тип String
             required: true, // обязательный: да
@@ -31,4 +31,4 @@ const PostSchema = new mongoose.Schema({ //Создаём схему юзера
     }
 );
 
-export default mongoose.model('User', UserSchema); //экспортируем модель. Указываем её название и фактическое название
+export default mongoose.model('Post', PostSchema); //экспортируем модель. Указываем её название и фактическое название

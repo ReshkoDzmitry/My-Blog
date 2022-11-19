@@ -1,8 +1,9 @@
 import express from 'express';
 import mongoose from "mongoose";
-import {registerValidation, loginValidation} from './validations.js';
+import {registerValidation, loginValidation, postCreateValidation} from './validations.js';
 import checkAuth from './utils/checkAuth.js'; //импортируем функцию checkAuth
 import * as UserController from './controllers/UserController.js'; //импортировать все методы в UserController
+import * as PostController from './controllers/PostController.js';
 
 
 mongoose.connect('mongodb+srv://admin:qqqqqq@cluster0.0v9j9gg.mongodb.net/blog?retryWrites=true&w=majority') //подключаем с помощью mongoose базу данных mongoDB с логином и паролем указанными при создании БД
@@ -35,11 +36,20 @@ app.post('/auth/login', loginValidation, UserController.login );
 //         token, //возвращаем токен клиенту
 //     });
 // });
-
-
 app.post('/auth/register', registerValidation, UserController.register);
-
 app.get('/auth/me', checkAuth, UserController.getMe);
+
+
+//создаём новый роут
+//app.get('/posts', PostController.getAll); //получение всех статей
+//app.get('/posts/:id', PostController.getOne); //получение одной статьи
+app.post('/posts', checkAuth, postCreateValidation, PostController.create); //создание статьи и её валидация. Не создастся пока не зарегистрирован
+//app.delete('/posts', PostController.remove); //создание статьи
+//app.patch('/posts', PostController.update); //создание статьи
+
+
+
+
 
 app.listen(4444, (err) => { //запускаем веб-сервер. Указываем на какой порт (любой) прикрепить приложение node.js. Вторым параметром передаем функцию условия запуска.
     if (err) { //если сервер не смог запуститься
