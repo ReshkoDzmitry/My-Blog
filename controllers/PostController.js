@@ -48,12 +48,12 @@ export const getOne = async (req, res) => { //получение всех ста
             message: 'Не удалось получить статьи',
         });
     }
-}
+};
 
 
 export const remove = async (req, res) => { //получение всех статей
     try {
-        const postId = req.params.id //достаем динамический id
+        const postId = req.params.id; //достаем динамический id
 
         PostModel.findOneAndDelete({ //находим пост из модели и удаляем
             _id: postId,
@@ -103,5 +103,15 @@ export const create = async (req, res) => { //асинхронная функц�
         res.status(500).json({
             message: 'Не удалось создать статью',
         });
+    }
+}
+
+export const update = async (req, res) => {
+    try {
+        const postId = req.params.id; //достаем динамический id
+
+    }
+    catch (err) {
+
     }
 }
