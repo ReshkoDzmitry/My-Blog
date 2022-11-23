@@ -44,7 +44,7 @@ app.get('/auth/me', checkAuth, UserController.getMe);
 app.get('/posts', PostController.getAll); //получение всех статей
 app.get('/posts/:id', PostController.getOne); //получение одной статьи
 app.post('/posts', checkAuth, postCreateValidation, PostController.create); //создание статьи и её валидация. Не создастся пока не зарегистрирован
-//app.delete('/posts', PostController.remove); //создание статьи
+app.delete('/posts:id', checkAuth, PostController.remove); //создание статьи
 //app.patch('/posts', PostController.update); //создание статьи
 
 

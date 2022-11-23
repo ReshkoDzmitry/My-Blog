@@ -51,6 +51,40 @@ export const getOne = async (req, res) => { //получение всех ста
 }
 
 
+export const remove = async (req, res) => { //получение всех статей
+    try {
+        const postId = req.params.id //достаем динамический id
+
+        PostModel.findOneAndDelete({ //находим пост из модели и удаляем
+            _id: postId,
+        }, (err, doc) => { //узнаём, была ли ошибка
+            if (err) {
+                console.log(err);
+                return res.status(500).json({
+                    message: 'Не удалось удалить статью',
+                })
+            }
+
+            if (!doc) {
+                return res.status(404).json({
+                    message: 'Статья не найдена',
+                })
+            }
+
+            res.json({ //если статья нашлась и удалилась, возвращаем ответ
+                success: true,
+            });
+        })
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            message: 'Не удалось получить статьи',
+        });
+    }
+}
+
+
 export const create = async (req, res) => { //асинхронная функция
     try {
         const doc = new PostModel({ //объясняем, что нужно создать документ
